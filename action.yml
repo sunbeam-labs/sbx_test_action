@@ -1,0 +1,64 @@
+name: 'Test Sunbeam Extension'
+description: 'Test full run of sunbeam extension'
+inputs:
+  sunbeam-version:
+    description: 'Branch or tag of sunbeam to install'
+    required: false
+    default: 'stable'
+  extension-name:
+    description: 'Name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)
+    required: true
+  extension-branch-name:
+    description: 'Branch name of extension to be tested (use ${{ github.head_ref }} to get current branch for PRs)'
+    required: true
+  other-extensions:
+    description: 'Any other extensions needed to run this one (use comma-separated string like "sunbeam-labs/sbx_one,other-user/sbx_two")'
+    required: false
+    default: ''
+outputs:
+  random-number:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-number }}
+runs:
+  using: "composite"
+  steps:
+    - name: setup-conda
+        uses: s-weigand/setup-conda@v1.1.0
+        with:
+          # Additional channels like 'conda-forge' which can be used to install packages
+          conda-channels: '' # optional, default is 
+      
+      - name: Install Pytest
+        run: python -m pip install -U pytest
+      
+      - name: Install Sunbeam
+        run: |
+          git clone --depth 1 --branch ${{ inputs.sunbeam-version }} https://github.com/sunbeam-labs/sunbeam sunbeam
+          cd sunbeam
+          bash install.sh -e sunbeam -v
+      
+      - name: Install Extensions
+        env:
+          BRANCH_NAME: ${{ inputs.extension-branch-name }}
+          EXTENSION_NAME: ${{ inputs.extension-name }}
+          EXTENSIONS_LIST: ${{ inputs.other-extensions }}
+        run: |
+          cd sunbeam
+          source activate sunbeam
+          
+          for i in ${EXTENSIONS_LIST//,/ }
+          do
+              sunbeam extend https://github.com/$i
+          done
+          
+          if [ -z "${BRANCH_NAME}" ]
+          then
+            git clone https://github.com/Ulthran/sbx_demic/ extensions/sbx_demic
+          else
+            git clone -b $BRANCH_NAME https://github.com/Ulthran/sbx_demic/ extensions/sbx_demic
+          fi
+          
+      - name: Run Tests
+        run: |
+          source activate sunbeam
+          pytest .tests/
