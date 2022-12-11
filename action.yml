@@ -19,10 +19,7 @@ inputs:
     description: 'Directory that contains e2e tests which need all of sunbeam to run'
     required: false
     default: '.tests/e2e/'
-outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-number }}
+    
 runs:
   using: "composite"
   steps:
