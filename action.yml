@@ -15,6 +15,10 @@ inputs:
     description: 'Any other extensions needed to run this one (use comma-separated string like "sunbeam-labs/sbx_one,other-user/sbx_two")'
     required: false
     default: ''
+  test-directory:
+    description: 'Directory that contains e2e tests which need all of sunbeam to run'
+    required: false
+    default: '.tests/e2e/'
 outputs:
   random-number:
     description: "Random number"
@@ -40,7 +44,7 @@ runs:
       - name: Install Extensions
         env:
           BRANCH_NAME: ${{ inputs.extension-branch-name }}
-          EXTENSION_NAME: ${{ inputs.extension-name }}
+          EXTENSION_FULL_NAME: ${{ inputs.extension-name }}
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
         run: |
           cd sunbeam
@@ -51,14 +55,17 @@ runs:
               sunbeam extend https://github.com/$i
           done
           
+          ARR=(${EXTENSION_FULL_NAME//// })
+          EXTENSION_NAME=${ARR[1]}
+          
           if [ -z "${BRANCH_NAME}" ]
           then
-            git clone https://github.com/Ulthran/sbx_demic/ extensions/sbx_demic
+            git clone https://github.com/$EXTENSION_FULL_NAME extensions/$EXTENSION_NAME
           else
-            git clone -b $BRANCH_NAME https://github.com/Ulthran/sbx_demic/ extensions/sbx_demic
+            git clone -b $BRANCH_NAME https://github.com/$EXTENSION_FULL_NAME extensions/$EXTENSION_NAME
           fi
           
       - name: Run Tests
         run: |
           source activate sunbeam
-          pytest .tests/
+          pytest ${{ inputs.test-directory }}
