@@ -6,7 +6,7 @@ inputs:
     required: false
     default: 'stable'
   extension-name:
-    description: 'Name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)
+    description: 'Name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
     required: true
   extension-branch-name:
     description: 'Branch name of extension to be tested (use ${{ github.head_ref }} to get current branch for PRs)'
