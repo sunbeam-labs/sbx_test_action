@@ -9,7 +9,7 @@ inputs:
     description: 'Name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
     required: true
   extension-branch-name:
-    description: 'Branch name of extension to be tested (use ${{ github.head_ref }} to get current branch for PRs)'
+    description: 'Branch name of extension to be tested (use /$/{/{ github.head_ref /}/} to get current branch for PRs)'
     required: true
   other-extensions:
     description: 'Any other extensions needed to run this one (use comma-separated string like "sunbeam-labs/sbx_one,other-user/sbx_two")'
@@ -23,7 +23,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: setup-conda
+      - name: setup-conda
         uses: s-weigand/setup-conda@v1.1.0
         with:
           # Additional channels like 'conda-forge' which can be used to install packages
