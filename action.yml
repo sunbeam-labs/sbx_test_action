@@ -71,18 +71,3 @@ runs:
           source activate sunbeam
           mkdir -p projects
           pytest --dir projects ${{ inputs.test-directory }}
-      
-      - name: Dump Logs
-        shell: bash
-        if: always()
-        run: tail -n +1 projects/sunbeam_output/logs/*
-      
-      - name: Dump Stats
-        shell: bash
-        if: always()
-        run: cat projects/stats/*
-
-      - name: Cleanup
-        shell: bash
-        if: always()
-        run: rm -r projects/
