@@ -69,5 +69,4 @@ runs:
         shell: bash
         run: |
           source activate sunbeam
-          mkdir -p projects
-          pytest --dir projects ${{ inputs.test-directory }}
+          pytest ${{ inputs.test-directory }}
