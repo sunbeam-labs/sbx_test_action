@@ -5,6 +5,10 @@ inputs:
     description: 'Branch or tag of sunbeam to install'
     required: false
     default: 'stable'
+  install-options:
+    description: 'Options to be passed to the sunbeam install script'
+    required: false
+    default: ''
   extension-name:
     description: 'Name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
     required: true
@@ -35,10 +39,12 @@ runs:
       
       - name: Install Sunbeam
         shell: bash
+        env:
+          INSTALL_OPTIONS: ${{ inputs.install-options }}
         run: |
           git clone --depth 1 --branch ${{ inputs.sunbeam-version }} https://github.com/sunbeam-labs/sunbeam sunbeam
           cd sunbeam
-          bash install.sh -e sunbeam -v
+          bash install.sh -e sunbeam -v $INSTALL_OPTIONS
       
       - name: Install Extensions
         shell: bash

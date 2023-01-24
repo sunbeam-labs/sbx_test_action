@@ -24,6 +24,10 @@ Options:
     description: 'Branch or tag of sunbeam to install'
     required: false
     default: 'stable'
+  install-options:
+    description: 'Options to be passed to the sunbeam install script'
+    required: false
+    default: ''
   extension-name:
     description: 'Name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
     required: true
