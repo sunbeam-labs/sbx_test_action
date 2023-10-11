@@ -75,4 +75,4 @@ runs:
         shell: bash
         run: |
           source activate sunbeam
-          pytest ${{ inputs.test-directory }}
+          pytest -vvvv -l --tb=long ${{ inputs.test-directory }}
