@@ -12,15 +12,15 @@ inputs:
   extension-name:
     description: 'Name of this extension (e.g. sbx_template or sbx_demic)'
     required: false
-    default: '${{ github.repository }}'
+    default: ${{ github.repository }}
   extension-org:
     description: 'Name of the organization (e.g. sunbeam-labs or Ulthran)'
     required: false
-    default: '${{ github.repository_owner }}'
+    default: ${{ github.repository_owner }}
   extension-branch-name:
     description: 'Branch name of extension to be tested (e.g. main or 1-feature-branch)'
     required: false
-    default: '${{ github.head_ref }}'
+    default: ${{ github.head_ref }}
   other-extensions:
     description: 'Any other extensions needed to run this one (use comma-separated string like "sunbeam-labs/sbx_one,other-user/sbx_two")'
     required: false
