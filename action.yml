@@ -9,14 +9,10 @@ inputs:
     description: 'Options to be passed to the sunbeam install script'
     required: false
     default: ''
-  extension-name:
-    description: 'Name of this extension (e.g. sbx_template or sbx_demic)'
+  extension-full-name:
+    description: 'Full name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
     required: false
     default: ${{ github.repository }}
-  extension-org:
-    description: 'Name of the organization (e.g. sunbeam-labs or Ulthran)'
-    required: false
-    default: ${{ github.repository_owner }}
   extension-branch-name:
     description: 'Branch name of extension to be tested (e.g. main or 1-feature-branch)'
     required: false
@@ -56,7 +52,6 @@ runs:
         shell: bash
         env:
           BRANCH_NAME: ${{ inputs.extension-branch-name }}
-          EXTENSION_NAME: ${{ inputs.extension-name }}
           EXTENSION_FULL_NAME: "${{ inputs.extension-org }}/${{ inputs.extension-name }}"
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
         run: |
@@ -71,6 +66,9 @@ runs:
           do
               sunbeam extend https://github.com/$i
           done
+
+          ARR=(${EXTENSION_FULL_NAME//// })
+          EXTENSION_NAME=${ARR[1]}
           
           if [ -z "${BRANCH_NAME}" ]
           then
