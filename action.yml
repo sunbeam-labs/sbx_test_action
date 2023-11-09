@@ -4,7 +4,7 @@ inputs:
   sunbeam-version:
     description: 'Branch or tag of sunbeam to install'
     required: false
-    default: 'stable'
+    default: 'main'
   install-options:
     description: 'Options to be passed to the sunbeam install script'
     required: false
