@@ -10,11 +10,17 @@ inputs:
     required: false
     default: ''
   extension-name:
-    description: 'Name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
-    required: true
+    description: 'Name of this extension (e.g. sbx_template or sbx_demic)'
+    required: false
+    default: '\{\{ github.repository \}\}'
+  extension-org:
+    description: 'Name of the organization (e.g. sunbeam-labs or Ulthran)'
+    required: false
+    default: '\{\{ github.repository_owner \}\}'
   extension-branch-name:
-    description: 'Branch name of extension to be tested (use /$/{/{ github.head_ref /}/} to get current branch for PRs)'
-    required: true
+    description: 'Branch name of extension to be tested (e.g. main or 1-feature-branch)'
+    required: false
+    default: '\{\{ github.head_ref \}\}'
   other-extensions:
     description: 'Any other extensions needed to run this one (use comma-separated string like "sunbeam-labs/sbx_one,other-user/sbx_two")'
     required: false
@@ -50,7 +56,8 @@ runs:
         shell: bash
         env:
           BRANCH_NAME: ${{ inputs.extension-branch-name }}
-          EXTENSION_FULL_NAME: ${{ inputs.extension-name }}
+          EXTENSION_NAME: ${{ inputs.extension-name }}
+          EXTENSION_FULL_NAME: ${{ inputs.extension-org }}/${{ inputs.extension-name }}
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
         run: |
           cd sunbeam
