@@ -52,7 +52,7 @@ runs:
         shell: bash
         env:
           BRANCH_NAME: ${{ inputs.extension-branch-name }}
-          EXTENSION_FULL_NAME: "${{ inputs.extension-org }}/${{ inputs.extension-name }}"
+          EXTENSION_FULL_NAME: ${{ inputs.extension-full-name }}
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
         run: |
           echo "BRANCH_NAME: $BRANCH_NAME"
