@@ -57,9 +57,13 @@ runs:
         env:
           BRANCH_NAME: ${{ inputs.extension-branch-name }}
           EXTENSION_NAME: ${{ inputs.extension-name }}
-          EXTENSION_FULL_NAME: ${{ inputs.extension-org }}/${{ inputs.extension-name }}
+          EXTENSION_FULL_NAME: "${{ inputs.extension-org }}/${{ inputs.extension-name }}"
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
         run: |
+          echo "BRANCH_NAME: $BRANCH_NAME"
+          echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME"
+          echo "EXTENSIONS_LIST: $EXTENSIONS_LIST"
+
           cd sunbeam
           source activate sunbeam
           
@@ -67,9 +71,6 @@ runs:
           do
               sunbeam extend https://github.com/$i
           done
-          
-          ARR=(${EXTENSION_FULL_NAME//// })
-          EXTENSION_NAME=${ARR[1]}
           
           if [ -z "${BRANCH_NAME}" ]
           then
