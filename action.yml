@@ -4,17 +4,19 @@ inputs:
   sunbeam-version:
     description: 'Branch or tag of sunbeam to install'
     required: false
-    default: 'stable'
+    default: 'main'
   install-options:
     description: 'Options to be passed to the sunbeam install script'
     required: false
     default: ''
-  extension-name:
-    description: 'Name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
-    required: true
+  extension-full-name:
+    description: 'Full name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
+    required: false
+    default: ${{ github.repository }}
   extension-branch-name:
-    description: 'Branch name of extension to be tested (use /$/{/{ github.head_ref /}/} to get current branch for PRs)'
-    required: true
+    description: 'Branch name of extension to be tested (e.g. main or 1-feature-branch)'
+    required: false
+    default: ${{ github.head_ref }}
   other-extensions:
     description: 'Any other extensions needed to run this one (use comma-separated string like "sunbeam-labs/sbx_one,other-user/sbx_two")'
     required: false
@@ -50,9 +52,13 @@ runs:
         shell: bash
         env:
           BRANCH_NAME: ${{ inputs.extension-branch-name }}
-          EXTENSION_FULL_NAME: ${{ inputs.extension-name }}
+          EXTENSION_FULL_NAME: ${{ inputs.extension-full-name }}
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
         run: |
+          echo "BRANCH_NAME: $BRANCH_NAME"
+          echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME"
+          echo "EXTENSIONS_LIST: $EXTENSIONS_LIST"
+
           cd sunbeam
           source activate sunbeam
           
@@ -60,7 +66,7 @@ runs:
           do
               sunbeam extend https://github.com/$i
           done
-          
+
           ARR=(${EXTENSION_FULL_NAME//// })
           EXTENSION_NAME=${ARR[1]}
           
