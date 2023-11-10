@@ -12,7 +12,7 @@ inputs:
   extension-full-name:
     description: 'Full name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
     required: false
-    default: ${{ github.repository }}
+    default: ${{ github.event.pull_request.head.repo.full_name }}
   extension-branch-name:
     description: 'Branch name of extension to be tested (e.g. main or 1-feature-branch)'
     required: false
