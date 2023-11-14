@@ -60,6 +60,8 @@ runs:
             EXTENSION_FULL_NAME="${{ github.event.org.login }}/${{ github.event.repository.name }}"
           fi
 
+          echo "${{ github.event.org }}"
+          echo "${{ github.event.repository }}"
           echo "BRANCH_NAME: $BRANCH_NAME"
           echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME"
           echo "EXTENSIONS_LIST: $EXTENSIONS_LIST"
