@@ -55,6 +55,11 @@ runs:
           EXTENSION_FULL_NAME: ${{ inputs.extension-full-name }}
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
         run: |
+          if [ -z "${EXTENSION_FULL_NAME}" ]
+          then
+            $EXTENSION_FULL_NAME = ${{ github.event.repository.name }}
+          fi
+
           echo "BRANCH_NAME: $BRANCH_NAME"
           echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME"
           echo "EXTENSIONS_LIST: $EXTENSIONS_LIST"
