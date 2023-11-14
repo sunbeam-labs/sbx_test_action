@@ -57,7 +57,7 @@ runs:
         run: |
           if [ -z "${EXTENSION_FULL_NAME}" ]
           then
-            $EXTENSION_FULL_NAME = ${{ github.event.repository.name }}
+            EXTENSION_FULL_NAME=${{ github.event.repository.name }}
           fi
 
           echo "BRANCH_NAME: $BRANCH_NAME"
