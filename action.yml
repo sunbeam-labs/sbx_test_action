@@ -57,10 +57,11 @@ runs:
         run: |
           if [ -z "${EXTENSION_FULL_NAME}" ]
           then
-            EXTENSION_FULL_NAME="${{ github.event.org.login }}/${{ github.event.repository.name }}"
+            URL=${{ github.event.repository.url }}
+            ARR=(${URL//// })
+            EXTENSION_FULL_NAME="${ARR[-2]}/${ARR[-1]}"
           fi
 
-          echo "${{ github.event.repository.url }}"
           echo "BRANCH_NAME: $BRANCH_NAME"
           echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME"
           echo "EXTENSIONS_LIST: $EXTENSIONS_LIST"
