@@ -89,4 +89,4 @@ runs:
         run: |
           source activate sunbeam
           pytest -vvvv -l --tb=long ${{ inputs.test-directory }} 2>&1 | tee pytest_output.txt
-          sed -n '/================================= FAILURES =================================/q;p' pytest_output.txt << $GITHUB_STEP_SUMMARY
+          sed -n '/================================= FAILURES =================================/q;p' pytest_output.txt >> $GITHUB_STEP_SUMMARY
