@@ -62,9 +62,9 @@ runs:
             EXTENSION_FULL_NAME="${ARR[-2]}/${ARR[-1]}"
           fi
 
-          echo "BRANCH_NAME: $BRANCH_NAME"
-          echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME"
-          echo "EXTENSIONS_LIST: $EXTENSIONS_LIST"
+          echo "BRANCH_NAME: $BRANCH_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "EXTENSIONS_LIST: $EXTENSIONS_LIST" >> $GITHUB_STEP_SUMMARY
 
           cd sunbeam
           source activate sunbeam
@@ -88,4 +88,5 @@ runs:
         shell: bash
         run: |
           source activate sunbeam
-          pytest -vvvv -l --tb=long ${{ inputs.test-directory }}
+          pytest -vvvv -l --tb=long ${{ inputs.test-directory }} 2>&1 | tee $TMPDIR/pytest_output.txt
+          sed -n '/================================= FAILURES =================================/q;p' $TMPDIR/pytest_output.txt << $GITHUB_STEP_SUMMARY
