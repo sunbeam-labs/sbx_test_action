@@ -43,3 +43,7 @@ Options:
     required: false
     default: '.tests/e2e/'
 ```
+
+### Dev
+
+I do the versioning in a silly way for this because of its usage. For minor bug fixes, after making the necessary updates in the main branch, update the current tag to point at the latest commit via `git tag -f <tag-name>` and then `git push --force origin <tag-name>`. Find a list of tags [here](https://github.com/sunbeam-labs/sbx_test_action/tags). If you're making significant enough changes to be worthy of a new tag (i.e. changes to the interface that will break old implementations) then create a new tag for your latest commit and update any uses of it in the necessary extensions.
