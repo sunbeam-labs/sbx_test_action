@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Test with Sunbeam
-        uses: sunbeam-labs/sbx_test_action@v0
+        uses: sunbeam-labs/sbx_test_action@v1
         with:
           extension-name: 'Ulthran/sbx_demic'
           extension-branch-name: ${{ github.head_ref }}

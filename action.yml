@@ -5,10 +5,6 @@ inputs:
     description: 'Branch or tag of sunbeam to install'
     required: false
     default: 'main'
-  install-options:
-    description: 'Options to be passed to the sunbeam install script'
-    required: false
-    default: ''
   extension-full-name:
     description: 'Full name of this extension (e.g. sunbeam-labs/sbx_template or Ulthran/sbx_demic)'
     required: false
@@ -35,18 +31,13 @@ runs:
           # Additional channels like 'conda-forge' which can be used to install packages
           conda-channels: '' # optional, default is 
       
-      - name: Install Pytest
-        shell: bash
-        run: python -m pip install -U pytest
-      
       - name: Install Sunbeam
         shell: bash
-        env:
-          INSTALL_OPTIONS: ${{ inputs.install-options }}
         run: |
-          git clone --depth 1 --branch ${{ inputs.sunbeam-version }} https://github.com/sunbeam-labs/sunbeam sunbeam
+          python -m pip install --upgrade pip
+          git clone --depth 1 --branch ${{ inputs.sunbeam-version }} https://github.com/sunbeam-labs/sunbeam.git sunbeam
           cd sunbeam
-          bash install.sh -e sunbeam -v $INSTALL_OPTIONS
+          pip install -e .[dev]
       
       - name: Install Extensions
         shell: bash
@@ -65,9 +56,6 @@ runs:
           echo "BRANCH_NAME: $BRANCH_NAME" >> $GITHUB_STEP_SUMMARY
           echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME" >> $GITHUB_STEP_SUMMARY
           echo "EXTENSIONS_LIST: $EXTENSIONS_LIST" >> $GITHUB_STEP_SUMMARY
-
-          cd sunbeam
-          source activate sunbeam
           
           for i in ${EXTENSIONS_LIST//,/ }
           do
@@ -87,6 +75,5 @@ runs:
       - name: Run Tests
         shell: bash
         run: |
-          source activate sunbeam
           pytest -vvvv -l --tb=long ${{ inputs.test-directory }} 2>&1 | tee pytest_output.txt
           sed -n '/================================= FAILURES =================================/q;p' pytest_output.txt >> $GITHUB_STEP_SUMMARY
