@@ -96,4 +96,8 @@ runs:
       - name: Run Tests
         shell: bash -l {0}
         run: |
-          pytest -vvvv -l --tb=long ${{ inputs.test-directory }}
+          set -eo pipefail  # Make the script fail on errors
+          pytest -vvvv -l --tb=long ${{ inputs.test-directory }} 2>&1 | tee pytest_output.txt
+          EXIT_CODE=${PIPESTATUS[0]}  # Save pytest exit code
+          sed -n '/= FAILURES =/q;p' pytest_output.txt >> $GITHUB_STEP_SUMMARY
+          exit $EXIT_CODE
