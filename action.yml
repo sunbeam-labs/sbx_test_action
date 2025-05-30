@@ -50,7 +50,7 @@ runs:
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
         run: |
           export SUNBEAM_EXTENSIONS=$(dirname "${GITHUB_WORKSPACE}")
-          
+
           for i in ${EXTENSIONS_LIST//,/ }
           do
               echo "Installing extension: $i" >> $GITHUB_STEP_SUMMARY
@@ -68,11 +68,18 @@ runs:
       - name: Run Tests
         shell: bash -l {0}
         run: |
-          set -eo pipefail  # Make the script fail on errors
+          set -eo pipefail
+
           export SUNBEAM_EXTENSIONS=$(dirname "${GITHUB_WORKSPACE}")
+
           echo "Extensions directory: $SUNBEAM_EXTENSIONS" >> $GITHUB_STEP_SUMMARY
-          echo "Extensions found: $(ls $SUNBEAM_EXTENSIONS)" >> $GITHUB_STEP_SUMMARY
-          pytest -vvvv -l --tb=long ${{ inputs.test-directory }} 2>&1 | tee pytest_output.txt
-          EXIT_CODE=${PIPESTATUS[0]}  # Save pytest exit code
+          echo "Extensions found: $(ls "$SUNBEAM_EXTENSIONS")" >> $GITHUB_STEP_SUMMARY
+
+          # Run pytest and capture output + exit code safely
+          (
+            pytest -vvvv -l --tb=long "${{ inputs.test-directory }}"
+          ) | tee pytest_output.txt
+          STATUS=${PIPESTATUS[0]}
+
           sed -n '/= FAILURES =/q;p' pytest_output.txt >> $GITHUB_STEP_SUMMARY
-          exit $EXIT_CODE
+          exit $STATUS
