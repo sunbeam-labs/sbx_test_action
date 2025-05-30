@@ -94,7 +94,7 @@ runs:
           black --check --diff ${{ inputs.black-directory }}
           
       - name: Run Tests
-        shell: bash
+        shell: bash -l {0}
         run: |
           pytest -vvvv -l --tb=long ${{ inputs.test-directory }} 2>&1 | tee pytest_output.txt
           sed -n '/================================= FAILURES =================================/q;p' pytest_output.txt >> $GITHUB_STEP_SUMMARY
