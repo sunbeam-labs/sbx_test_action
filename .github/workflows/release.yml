@@ -41,7 +41,7 @@ jobs:
           git push origin --force ${{ steps.version.outputs.major_tag }}
 
       - name: Create release for major tag (e.g., v1)
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.major_tag }}
           name: ${{ steps.version.outputs.major_tag }}
