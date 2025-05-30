@@ -52,38 +52,16 @@ runs:
           cd sunbeam
           pip install -e .[dev]
       
-      - name: Install Extensions
+      - name: Install extra extensions
         shell: bash -l {0}
         env:
-          BRANCH_NAME: ${{ inputs.extension-branch-name }}
-          EXTENSION_FULL_NAME: ${{ inputs.extension-full-name }}
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
+          SUNBEAM_EXTENSIONS: ${{ github.workspace }}
         run: |
-          if [ -z "${EXTENSION_FULL_NAME}" ]
-          then
-            URL=${{ github.event.repository.url }}
-            ARR=(${URL//// })
-            EXTENSION_FULL_NAME="${ARR[-2]}/${ARR[-1]}"
-          fi
-
-          echo "BRANCH_NAME: $BRANCH_NAME" >> $GITHUB_STEP_SUMMARY
-          echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME" >> $GITHUB_STEP_SUMMARY
-          echo "EXTRA_EXTENSIONS_LIST: $EXTENSIONS_LIST" >> $GITHUB_STEP_SUMMARY
-          
           for i in ${EXTENSIONS_LIST//,/ }
           do
               sunbeam extend https://github.com/$i
           done
-
-          ARR=(${EXTENSION_FULL_NAME//// })
-          EXTENSION_NAME=${ARR[1]}
-          
-          if [ -z "${BRANCH_NAME}" ]
-          then
-            git clone https://github.com/$EXTENSION_FULL_NAME extensions/$EXTENSION_NAME
-          else
-            git clone -b $BRANCH_NAME https://github.com/$EXTENSION_FULL_NAME extensions/$EXTENSION_NAME
-          fi
 
       - name: Lint
         shell: bash -l {0}
@@ -95,6 +73,8 @@ runs:
           
       - name: Run Tests
         shell: bash -l {0}
+        env:
+          SUNBEAM_EXTENSIONS: ${{ github.workspace }}
         run: |
           set -eo pipefail  # Make the script fail on errors
           pytest -vvvv -l --tb=long ${{ inputs.test-directory }} 2>&1 | tee pytest_output.txt
