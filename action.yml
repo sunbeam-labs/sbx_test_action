@@ -48,8 +48,9 @@ runs:
         shell: bash -l {0}
         env:
           EXTENSIONS_LIST: ${{ inputs.other-extensions }}
-          SUNBEAM_EXTENSIONS: ${{ github.workspace }}
         run: |
+          export SUNBEAM_EXTENSIONS=$(dirname "${GITHUB_WORKSPACE}")
+          
           for i in ${EXTENSIONS_LIST//,/ }
           do
               echo "Installing extension: $i" >> $GITHUB_STEP_SUMMARY
@@ -60,16 +61,15 @@ runs:
         shell: bash -l {0}
         run: |
           snakefmt --check ${{ inputs.snakefmt-directory }}
-          echo "Linted snakefiles in directory: ${{ inputs.snakefmt-directory }}" >> $GITHUB_STEP_SUMMARY
+          echo "Linted snakefiles: ${{ inputs.snakefmt-directory }}" >> $GITHUB_STEP_SUMMARY
           black --check --diff ${{ inputs.black-directory }}
-          echo "Linted python files in directory: ${{ inputs.black-directory }}" >> $GITHUB_STEP_SUMMARY
+          echo "Linted python files: ${{ inputs.black-directory }}" >> $GITHUB_STEP_SUMMARY
           
       - name: Run Tests
         shell: bash -l {0}
-        env:
-          SUNBEAM_EXTENSIONS: ${{ github.workspace }}
         run: |
           set -eo pipefail  # Make the script fail on errors
+          export SUNBEAM_EXTENSIONS=$(dirname "${GITHUB_WORKSPACE}")
           echo "Extensions directory: $SUNBEAM_EXTENSIONS" >> $GITHUB_STEP_SUMMARY
           echo "Extensions found: $(ls $SUNBEAM_EXTENSIONS)" >> $GITHUB_STEP_SUMMARY
           pytest -vvvv -l --tb=long ${{ inputs.test-directory }} 2>&1 | tee pytest_output.txt
