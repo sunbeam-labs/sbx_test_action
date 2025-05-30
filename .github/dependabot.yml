@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    directory: "/" # Adjust this if your workflows are nested
+    directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5

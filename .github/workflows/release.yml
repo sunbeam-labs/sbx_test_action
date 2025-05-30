@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # e.g., v1.2.3
+  
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+permissions:
+  contents: write  # Required for tagging and creating releases
+
+jobs:
+  release:
+    name: Create Release and Major Tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version components
+        id: version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"      # e.g. v1.2.3
+          TAG="${TAG#refs/heads/}"            # Handle branch instead of tag (TESTING)
+          VERSION="$TAG"                      # Full version tag
+          MAJOR="${TAG#v}"                    # Strip first 'v': 1.2.3
+          MAJOR="v${MAJOR%%.*}"               # Take major version only: 1
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "major_tag=$MAJOR" >> "$GITHUB_OUTPUT"
+          echo "Full version: $VERSION" >> "$GITHUB_STEP_SUMMARY"
+          echo "Major tag: $MAJOR" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Force-create/update major tag (e.g., v1)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch --tags
+          git tag -f ${{ steps.version.outputs.major_tag }} ${{ steps.version.outputs.version }}
+          git push origin --force ${{ steps.version.outputs.major_tag }}
+
+      - name: Create release for major tag (e.g., v1)
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.major_tag }}
+          name: ${{ steps.version.outputs.major_tag }}
+          body: |
+            This tag points to [${{ steps.version.outputs.version }}](https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.version }}).
+          draft: false
+          prerelease: false
