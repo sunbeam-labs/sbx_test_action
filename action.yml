@@ -68,7 +68,7 @@ runs:
 
           echo "BRANCH_NAME: $BRANCH_NAME" >> $GITHUB_STEP_SUMMARY
           echo "EXTENSION_FULL_NAME: $EXTENSION_FULL_NAME" >> $GITHUB_STEP_SUMMARY
-          echo "EXTENSIONS_LIST: $EXTENSIONS_LIST" >> $GITHUB_STEP_SUMMARY
+          echo "EXTRA_EXTENSIONS_LIST: $EXTENSIONS_LIST" >> $GITHUB_STEP_SUMMARY
           
           for i in ${EXTENSIONS_LIST//,/ }
           do
@@ -96,5 +96,6 @@ runs:
       - name: Run Tests
         shell: bash -l {0}
         run: |
+          set -o pipefail
           pytest -vvvv -l --tb=long ${{ inputs.test-directory }} 2>&1 | tee pytest_output.txt
           sed -n '/================================= FAILURES =================================/q;p' pytest_output.txt >> $GITHUB_STEP_SUMMARY
