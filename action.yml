@@ -68,18 +68,13 @@ runs:
       - name: Run Tests
         shell: bash -l {0}
         run: |
-          set -eo pipefail
-
           export SUNBEAM_EXTENSIONS=$(dirname "${GITHUB_WORKSPACE}")
 
           echo "Extensions directory: $SUNBEAM_EXTENSIONS" >> $GITHUB_STEP_SUMMARY
           echo "Extensions found: $(ls "$SUNBEAM_EXTENSIONS")" >> $GITHUB_STEP_SUMMARY
 
-          # Run pytest and capture output + exit code safely
-          (
-            pytest -vvvv -l --tb=long "${{ inputs.test-directory }}"
-          ) | tee pytest_output.txt
-          STATUS=${PIPESTATUS[0]}
+          pytest -vvvv -l --tb=long "${{ inputs.test-directory }}"
+          STATUS=$?
 
           sed -n '/= FAILURES =/q;p' pytest_output.txt >> $GITHUB_STEP_SUMMARY
           exit $STATUS
