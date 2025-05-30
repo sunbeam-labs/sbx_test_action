@@ -1,5 +1,8 @@
 name: 'Test Sunbeam Extension'
 description: 'Test full run of sunbeam extension'
+branding:
+  icon: 'check-circle'
+  color: 'green'
 inputs:
   sunbeam-version:
     description: 'Branch or tag of sunbeam to install'
