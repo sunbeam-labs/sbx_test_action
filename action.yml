@@ -60,6 +60,7 @@ runs:
       - name: Lint
         shell: bash -l {0}
         run: |
+          set -euo pipefail
           snakefmt --check ${{ inputs.snakefmt-directory }}
           echo "Linted snakefiles: ${{ inputs.snakefmt-directory }}" >> $GITHUB_STEP_SUMMARY
           black --check --diff ${{ inputs.black-directory }}
