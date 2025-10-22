@@ -61,8 +61,10 @@ runs:
         shell: bash -l {0}
         run: |
           set -euo pipefail
+          echo "Snakefmt check..."
           snakefmt --check ${{ inputs.snakefmt-directory }}
           echo "Linted snakefiles: ${{ inputs.snakefmt-directory }}" >> $GITHUB_STEP_SUMMARY
+          echo "Black check..."
           black --check --diff ${{ inputs.black-directory }}
           echo "Linted python files: ${{ inputs.black-directory }}" >> $GITHUB_STEP_SUMMARY
           
