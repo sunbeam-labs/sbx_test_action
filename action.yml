@@ -70,8 +70,9 @@ runs:
           fi
 
           # Run pytest and capture exit code. Allow pytest to return non-zero without killing the script.
-          pytest -q "$TARGET" || true
+          pytest -q "$TARGET"
           rc=$?
+          true
 
           if [ "$rc" -eq 0 ]; then
             echo "Extension scripts tests passed (rc=0)" >> $GITHUB_STEP_SUMMARY
