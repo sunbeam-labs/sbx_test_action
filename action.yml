@@ -40,9 +40,13 @@ runs:
         shell: bash -l {0}
         run: |
           python -m pip install --upgrade pip
-          git clone --depth 1 --branch ${{ inputs.sunbeam-version }} https://github.com/sunbeam-labs/sunbeam.git sunbeam
-          cd sunbeam
-          pip install -e .[dev]
+          SUNBEAM_SOURCE_DIR="${RUNNER_TEMP:-/tmp}/sunbeam"
+          rm -rf "$SUNBEAM_SOURCE_DIR"
+          git clone --depth 1 --branch ${{ inputs.sunbeam-version }} https://github.com/sunbeam-labs/sunbeam.git "$SUNBEAM_SOURCE_DIR"
+          (
+            cd "$SUNBEAM_SOURCE_DIR"
+            pip install -e .[dev]
+          )
       
       - name: Install extra extensions
         shell: bash -l {0}

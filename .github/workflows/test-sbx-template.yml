@@ -1,0 +1,32 @@
+name: Test sbx_template Extension
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-action:
+    name: Run sbx_test_action against sbx_template
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout action
+        uses: actions/checkout@v4
+
+      - name: Checkout sbx_template extension
+        uses: actions/checkout@v4
+        with:
+          repository: sunbeam-labs/sbx_template
+          path: sbx_template
+
+      - name: Move sbx_template adjacent to workspace
+        run: mv sbx_template ..
+
+      - name: Run extension tests
+        uses: ./
+        with:
+          test-directory: ../sbx_template/.tests
+          snakefmt-directory: ../sbx_template
+          black-directory: ../sbx_template
