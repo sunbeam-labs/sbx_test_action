@@ -18,3 +18,7 @@ jobs:
 ```
 
 See the `inputs` section at the top of `action.yml` for a list of options.
+
+## Dev
+
+After making updates to the code, make a new release. The release action will take care of the rest.
