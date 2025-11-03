@@ -13,10 +13,10 @@ jobs:
 
     steps:
       - name: Checkout action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Checkout sbx_template extension
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: sunbeam-labs/sbx_template
           path: sbx_template
