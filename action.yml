@@ -29,7 +29,7 @@ runs:
   using: "composite"
   steps:
       - name: Setup micromamba
-        uses: mamba-org/setup-micromamba@v2
+        uses: mamba-org/setup-micromamba@v3
         with:
           environment-name: lockenv
           create-args: python=3.11
